@@ -1,14 +1,22 @@
+import 'package:bookly_app/Features/home/data/models/book_model/book_model.dart';
 import 'package:bookly_app/Features/home/presentation/views/widgets/book_rating.dart';
+import 'package:bookly_app/Features/home/presentation/views/widgets/custom_book_image.dart';
 import 'package:bookly_app/constants.dart';
 import 'package:bookly_app/core/utils/app_router.dart';
-import 'package:bookly_app/core/utils/assets.dart';
+
 import 'package:bookly_app/core/utils/styles.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class BooksListViewItem extends StatelessWidget {
-  const BooksListViewItem({super.key});
-
+  const BooksListViewItem({
+    super.key,
+    required this.book,
+  });
+  final BookModel book;
+  // final int rating;
+  // final int count;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -19,19 +27,7 @@ class BooksListViewItem extends StatelessWidget {
         height: 125,
         child: Row(
           children: [
-            AspectRatio(
-              aspectRatio: 2.5 / 4,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.red,
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage(AssetsData.testImage),
-                  ),
-                ),
-              ),
-            ),
+            CustomBookImage(imageUrl: book.volumeInfo.imageLinks.thumbnail),
             const SizedBox(
               width: 30,
             ),
@@ -42,7 +38,7 @@ class BooksListViewItem extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * .5,
                     child: Text(
-                      'Harry Potter and the Goblet of Fire',
+                      book.volumeInfo.title!,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Styles.textStyle20
@@ -53,7 +49,7 @@ class BooksListViewItem extends StatelessWidget {
                     height: 3,
                   ),
                   Text(
-                    'J.K. Rowling',
+                    book.volumeInfo.authors![0],
                     style: Styles.textStyle14,
                   ),
                   SizedBox(
@@ -62,12 +58,15 @@ class BooksListViewItem extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        '19,99 §',
+                        'Free',
                         style: Styles.textStyle20
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
                       Spacer(),
-                      BookRating()
+                      BookRating(
+                        rating: book.volumeInfo.maturityRating!,
+                        count: book.volumeInfo.pageCount!,
+                      )
                     ],
                   )
                 ],
